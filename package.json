@@ -1,0 +1,19 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "## Section 1: Getting Started",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vanderSangen88/Udemy-React-Native-The-Practical-Guide.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vanderSangen88/Udemy-React-Native-The-Practical-Guide/issues"
+  },
+  "homepage": "https://github.com/vanderSangen88/Udemy-React-Native-The-Practical-Guide#readme"
+}
