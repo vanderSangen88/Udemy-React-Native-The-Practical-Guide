@@ -908,9 +908,10 @@ AppRegistry.registerComponent(appName, () => RNRedux); // 15
 5) Import the action creators from the bundled actions file.
 6) Create a function which receives the `dispatch` and returns a JS-object where properties are mapped to be used as props in components, and store it in a constant e.g. `mapDispatchToProps`.
 7) Add `action`-keys which hold functions which dispatch the action and pass expected arguments.
-8) Remove local state
-9) In each handler, reach out to the `this.props.[dispatchAction]`-prop and pass the `arguments` it expects.
-10 In the returned JSX, replace `state` with `props`.
+8) Pass the arguments to connect.
+9) Remove local state  
+10) In each handler, reach out to the `this.props.[dispatchAction]`-prop and pass the `arguments` it expects.  
+11) In the returned JSX, replace `state` with `props`.
 ```js
 ...
 import { connect } from 'react-redux'; // 1
@@ -918,9 +919,9 @@ import { connect } from 'react-redux'; // 1
 import { addPlace, deletePlace, selectPlace, deselectPlace } from './src/store/actions/index'; // 5
 
 class App extends Component { // 2a
-// - 8
+// - 9
 
-    placeAddedHandler = placeName => { // 9a
+    placeAddedHandler = placeName => { // 10a
         // this.setState(prevState => {
         //     return {
         //         places: prevState.places.concat({
@@ -934,9 +935,9 @@ class App extends Component { // 2a
         // });
 
         this.props.onAddPlace(placeName);
-  }
+    };
 
-    placeDeletedHandler = () => { // 9b
+    placeDeletedHandler = () => { // 10b
         // this.setState(prevState => {
         //   return {
         //     places: prevState.places.filter(place => {
@@ -947,17 +948,17 @@ class App extends Component { // 2a
         // });
 
         this.props.onDeletePlace();
-    }
+    };
 
-    modalClosedHandler = () => { // 9c
+    modalClosedHandler = () => { // 10c
         // this.setState({
         //     selectedPlace: null
         // })
 
         this.props.onDeselectPlace();
-    }
+    };
 
-    placeSelectedHandler = key => { // 9d
+    placeSelectedHandler = key => { // 10d
         // this.setState(prevState => {
         //     return {
         //         selectedPlace: prevState.places.find(place => {
@@ -967,9 +968,9 @@ class App extends Component { // 2a
         // });
 
         this.props.onSelectPlace(key);
-    }
+    };
     
-    render() { // 10
+    render() { // 11
         return (
             ...
             <PlaceDetail 
@@ -979,7 +980,7 @@ class App extends Component { // 2a
                 places={this.props.places}
             />
         )
-    }
+    };
 ...
 };
 ...
@@ -1000,6 +1001,15 @@ const mapDispatchToProps = dispatch => { // 6
     };
 };
 
-export default connect()(App); // 2b
-
+export default connect(mapStateToProps, mapDispatchToProps)(App); // 2b & 8
 ```
+
+### #50 - Useful Resources & Links
+
+- [What's Redux](https://redux.js.org/docs/introduction/CoreConcepts.html)
+- [react-redux](https://github.com/reactjs/react-redux)
+---
+
+## Section 4: Debugging React Native Apps
+
+### #51 - Module Introduction

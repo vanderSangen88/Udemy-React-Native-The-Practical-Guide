@@ -18,19 +18,19 @@ import { addPlace, deletePlace, selectPlace, deselectPlace } from './src/store/a
 class App extends Component {
   placeAddedHandler = placeName => {
     this.props.onAddPlace(placeName);
-  }
+  };
 
   placeDeletedHandler = () => {
     this.props.onDeletePlace();
-  }
+  };
 
   modalClosedHandler = () => {
     this.props.onDeselectPlace();
-  }
+  };
 
   placeSelectedHandler = key => {
     this.props.onSelectPlace(key);
-  }
+  };
 
   render() {
     return (
@@ -51,7 +51,7 @@ class App extends Component {
         />
       </View>
     );
-  }
+  };
 }
 
 const styles = StyleSheet.create({
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => { 
   return {
       places: state.places.places, 
-      selectedPlace: null
+      selectedPlace: state.places.selectedPlace
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -80,4 +80,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect()(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
