@@ -547,9 +547,9 @@ import { FlatList, StyleSheet } from 'react-native'; // 1a
 ...
 ```
 
-*in App.js:*
-7) Change the concatination of the `placeName`-string to an object.
-11) Update the `placeDeletedHandler`-method to use the place-object
+*in App.js:*  
+7) Change the concatination of the `placeName`-string to an object.  
+11) Update the `placeDeletedHandler`-method to use the place-object  
 ```js
     ...
     placeDeletedHandler = index => {
@@ -575,10 +575,10 @@ import { FlatList, StyleSheet } from 'react-native'; // 1a
 
 ### #34 - Adding Static Images
 
-*in App.js:*
-1) Import the `placeImage` 
-2) Assign it to the `image`-property of the place-object
-3) Rename the `value`-property to `name`.
+*in App.js:*  
+1) Import the `placeImage`   
+2) Assign it to the `image`-property of the place-object  
+3) Rename the `value`-property to `name`.  
 ```js
     ...
     import placeImage from './src/assets/beautiful-place.jpg'; // 1
@@ -593,9 +593,9 @@ import { FlatList, StyleSheet } from 'react-native'; // 1a
     ...
 ```
 
-*in PlaceList.js:*
-4) Rename the `value`-property to `name`.
-5) Add the `placeImage`-prop and pass the image from the place-object
+*in PlaceList.js:*  
+4) Rename the `value`-property to `name`.  
+5) Add the `placeImage`-prop and pass the image from the place-object  
 ```js
     ...
     <ListItem
@@ -606,12 +606,12 @@ import { FlatList, StyleSheet } from 'react-native'; // 1a
     ...
 ```
 
-*in ListItem.js:*
-6) Import React Native's `Image`-component
-7) Add the `Image`-component
-8) Add the `source`-prop and pass the placeImage from props
-9) Alter the styling
-10) Connect styling
+*in ListItem.js:*  
+6) Import React Native's `Image`-component  
+7) Add the `Image`-component  
+8) Add the `source`-prop and pass the placeImage from props  
+9) Alter the styling  
+10) Connect styling  
 ```js
     ...
     import { ..., Image } from 'react-native'; // 6
@@ -691,14 +691,14 @@ import { FlatList, StyleSheet } from 'react-native'; // 1a
 
 3) Create a new `places`-reducer as the "rootReducer"
 
-*in places.js:*
-4) Create a `reducer`-function which accepts the previous `state`, aswel as the `action` to handle 
-5) Export the function as default
-6) Create a `initialState`-variable which hold the state at the start of the application.
-7) Import the properties (`places` & `selectedPlace`) of the state from App.js
-8) Set the default value of the `state`
-9) Create a typical switch-statement inside of the reducer function
-10) Setup default to return the state
+*in places.js:*  
+4) Create a `reducer`-function which accepts the previous `state`, aswel as the `action` to handle   
+5) Export the function as default  
+6) Create a `initialState`-variable which hold the state at the start of the application.  
+7) Import the properties (`places` & `selectedPlace`) of the state from App.js  
+8) Set the default value of the `state`  
+9) Create a typical switch-statement inside of the reducer function  
+10) Setup default to return the state  
 ```js
 const initialState = { // 6
     places: [],
@@ -716,5 +716,290 @@ export default reducer; // 5
 ```
 
 ### #45 - Setting Up Actions
+1) Create a new `actionTypes.js`-file inside of the `src/actions`-folder.
+2) Create constants defining the action types.
+
+> Convention is to name the constant as the string in uppercase
+
+*in actionTypes.js:*
+```js
+    // 2
+    export const ADD_PLACE = 'ADD_PLACE';
+    export const DELETE_PLACE = 'DELETE_PLACE';
+    export const SELECT_PLACE = 'SELECT_PLACE';
+    export const DESELECT_PLACE = 'DESELECT_PLACE';
+```
+
+> The Action Creator Idea is basically a couple of functions which return object which represents actions.
+> Convenient when using asynchronous code or need to handle side effects.
+
+3) Create a new `places.js`-file inside of the `src/actions`-folder to store the places related actions.
+4) Create the functions and store them in constants
+
+> An action needs to have the `type`-property
+
+5) Import the actionTypes
+
+*in places.js:*
+```js
+    import {ADD_PLACE, DELETE_PLACE, SELECT_PLACE, DESELECT_PLACE} from './actionTypes'; // 5
+
+    // 4
+    export const addPlace = (placeName) => {
+        return {
+            type: ADD_PLACE,
+            placeName: placeName
+        };
+    };
+
+    export const deletePlace = () => {
+        return {
+            type: DELETE_PLACE
+        }
+    };
+
+    export const selectPlace = (key) => {
+        return {
+            type: SELECT_PLACE,
+            placeKey: key
+        }
+    };
+
+    export const deselectPlace = () => {
+        return {
+            type: DESELECT_PLACE
+        }
+    }
+```
+
+6) Create a new `index.js`-file inside of the `src/actions`-folder to bundle all exports
+7) Export all action creators
+*in index.js:*
+```js
+    export { addPlace, deletePlace, selectPlace, deselectPlace } from './places';
+```
 
 ### #46 - Setting Up the Reducer
+
+1) Import the actionTypes
+2) Add the `ADD_PLACE`-case to the switch-statement
+3) Copy the logic of the placeAddedHandler from App.js
+
+> Never manipulate the old state, always return a new state!
+
+4) Copy the properties of the old state by using the ES6 Spread Operator.
+5) Overwrite the `places`-property with the copied logic.
+6) Change `prevState` to `state`,
+7) Change `placeName` to `action.placeName`
+
+The same works for the other actiontypes
+
+*in reducers/places.js:*
+```js
+   import { ADD_PLACE, DELETE_PLACE, SELECT_PLACE, DESELECT_PLACE } from './../actions/actionTypes'; // 1
+
+   ...
+
+    const reducer = (state = initialState, action) => {
+        switch (action.type) {
+            case ADD_PLACE: // 2
+                return {
+                    ...state, // 4
+                    places: state.places.concat({ //5 & 6
+                        key: Math.random(),
+                        name: action.placeName, // 7
+                        image: {
+                            uri: "https://c1.staticflickr.com/5/4096/4744241983_34023bf303_b.jpg"
+                        }
+                    })
+                };
+
+            default:
+                return state;
+        }
+    };
+...
+```
+
+### #47 - Creating the Store
+
+#### 1. Make React aware of Redux: whenever the app is mounted.
+
+*in index.js:*
+1) Import the `Provider`-component from react-redux.
+> The `Provider`-component is a thin wrapper for the `App`-component
+
+```js
+...
+import { Provider } from 'react-redux'; // 1
+...
+```
+
+2) Create a new `configureStore.js`-file in the `src/store`-folder
+
+*in configureStore.js:*  
+3) Import `createStore` and `combineReducers` from redux  
+4) Import reducers: `placesReducer`  
+5) Create the `rootReducer`  
+6) Pass a JS-object which maps any keys to the reducers  
+7) Create the store - `configureStore`, a function.    
+> The store could have arguments if the store would be created dynamically.
+8) return a call to `createStore` and pass it the `rootReducer`
+> createStore expects one single reducer
+9) export `configureStore` as the default
+```js
+
+import { createStore, combineReducers } from 'redux'; // 3
+
+import placesReducer from './reducers/places'; // 4
+
+const rootReducer = combineReducers({ // 5
+    places: placesReducer // 6
+});
+
+const configureStore = () => { // 7
+    return createStore(rootReducer); // 8
+};
+
+export default configureStore; // 9
+```
+
+*back in index.js:*  
+10) Import the newly created `configureStore`  
+11) Import React  
+12) Execute the `configureStore`-function and store it a constant, for example "store".  
+13) Create a function which returns the JSX wrapping the `App`-component with the `Provider`-component and store it in a constant, for example "RNRedux"
+> The `Provider`-component is a thin wrapper for the `App`-component
+14) Pass the "store" to the `store`-prop of the `Provider`-component
+15) Pass the wrapper to the `AppRegistry`.
+> AppRegistry expects a function which does return another function which returns JSX
+
+```js
+import React from 'react'; // 11
+...
+import configureStore from './src/store/configureStore'; // 10
+...
+
+const store = configureStore(); // 12
+
+const RNRedux = () => ( // 13
+    <Provider 
+        store={store} // 14
+    >
+        <App />
+    </Provider>
+);
+
+AppRegistry.registerComponent(appName, () => RNRedux); // 15
+```
+
+### #48 - Creating the Store
+
+#### 2. Connect App.js to React Redux
+
+*in App.js:*  
+1) Import `connect` from react-redux
+> `connect` is a Higher Order component to connect a component to the Redux Store
+2) Refactor the export definition
+> The `connect`-function will accept 2 arguments:
+3) Create a function which receives the `state` and returns a JS-object where keys are mapped to be accessible as props, and store it in a constant e.g. `mapStateToProps`.  
+4) Add the `places`- & `selectedPlace`-key to the object.
+> Get them from the global "state" > the property in the reducer "places" > the property this slide of the state holds "places" or "selectedPlace".
+5) Import the action creators from the bundled actions file.
+6) Create a function which receives the `dispatch` and returns a JS-object where properties are mapped to be used as props in components, and store it in a constant e.g. `mapDispatchToProps`.
+7) Add `action`-keys which hold functions which dispatch the action and pass expected arguments.
+8) Remove local state
+9) In each handler, reach out to the `this.props.[dispatchAction]`-prop and pass the `arguments` it expects.
+10 In the returned JSX, replace `state` with `props`.
+```js
+...
+import { connect } from 'react-redux'; // 1
+...
+import { addPlace, deletePlace, selectPlace, deselectPlace } from './src/store/actions/index'; // 5
+
+class App extends Component { // 2a
+// - 8
+
+    placeAddedHandler = placeName => { // 9a
+        // this.setState(prevState => {
+        //     return {
+        //         places: prevState.places.concat({
+        //             key: Math.random(),
+        //             name: placeName,
+        //             image: {
+        //                 uri: "https://c1.staticflickr.com/5/4096/4744241983_34023bf303_b.jpg"
+        //             }
+        //         })
+        //     };
+        // });
+
+        this.props.onAddPlace(placeName);
+  }
+
+    placeDeletedHandler = () => { // 9b
+        // this.setState(prevState => {
+        //   return {
+        //     places: prevState.places.filter(place => {
+        //       return place.key !== prevState.selectedPlace.key;
+        //     }),
+        //     selectedPlace: null
+        //   }
+        // });
+
+        this.props.onDeletePlace();
+    }
+
+    modalClosedHandler = () => { // 9c
+        // this.setState({
+        //     selectedPlace: null
+        // })
+
+        this.props.onDeselectPlace();
+    }
+
+    placeSelectedHandler = key => { // 9d
+        // this.setState(prevState => {
+        //     return {
+        //         selectedPlace: prevState.places.find(place => {
+        //             return place.key === key
+        //         })
+        //     };
+        // });
+
+        this.props.onSelectPlace(key);
+    }
+    
+    render() { // 10
+        return (
+            ...
+            <PlaceDetail 
+                selectedPlace={this.props.selectedPlace}
+            />
+            <PlaceList 
+                places={this.props.places}
+            />
+        )
+    }
+...
+};
+...
+const mapStateToProps = state => { // 3
+    return {
+        // 4:
+        places: state.places.places, 
+        selectedPlace: state.places.selectedPlace 
+    };
+};
+const mapDispatchToProps = dispatch => { // 6
+    return {
+        // 7:
+        onAddPlace: (name) => dispatch(addPlace(name)),
+        onDeletePlace: () => dispatch(deletePlace()),
+        onSelectPlace: (key) => dispatch(selectPlace(key)),
+        onDeselectPlace: () => dispatch(deselectPlace())
+    };
+};
+
+export default connect()(App); // 2b
+
+```
