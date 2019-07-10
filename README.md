@@ -664,6 +664,11 @@ import { FlatList, StyleSheet } from 'react-native'; // 1a
 ```
 
 ### #36 - Adding a Modal
+*in PlaceDetail.js:*
+1) Import the `Modal`-component from react-native
+```js
+import { Modal } from 'react-native';
+```
 
 ### #37 - React vs React Native
 
@@ -1004,7 +1009,7 @@ const mapDispatchToProps = dispatch => { // 6
 export default connect(mapStateToProps, mapDispatchToProps)(App); // 2b & 8
 ```
 
-### #50 - Useful Resources & Links
+### #51 - Useful Resources & Links
 
 - [What's Redux](https://redux.js.org/docs/introduction/CoreConcepts.html)
 - [react-redux](https://github.com/reactjs/react-redux)
@@ -1012,4 +1017,45 @@ export default connect(mapStateToProps, mapDispatchToProps)(App); // 2b & 8
 
 ## Section 4: Debugging React Native Apps
 
-### #51 - Module Introduction
+### #53 - Using the Remote JavaScript Debugging console.log
+
+1) Press `Cmd` + `D` to open the options
+2) Select the option "Debug JS Remotely" to enable debugging in a Chrome Inspector-window.
+
+### #54 - Debugging with Breakpoints
+
+1) While Debugging Remotely, open the `Sources`-tab of the Inspector.
+2) Open any .js-file and set a breakpoint.
+
+### #55 - Debugging+++ with React Native Debugger
+
+1) Download and extract the OS-specific zip from [React Native Debugger](https://github.com/jhen0409/react-native-debugger).
+
+### #56 - Debugging Redux
+
+*in configureStore.js:*
+1) Import the `compose`-function from the redux-package.
+> `compose` is used to add multiple enhancers, like middleware
+2) Add a new `let`-variable, like `composeEnhancers`, enabling it to be reassigned.
+3) Assign the imported `compose`-function to it.
+4) Check for the special global variable "\_\_DEV\_\_" exposed by React Native, which is only true in development mode
+5) If true, connect it to the React Native Dev Tools or fallback to the compose-function.
+6) Add the `composeEnhancers`-function to the `createStore`-function.
+> Once other middleware need to be added, they need to be passed to the composeEnhancers-function in the returned createStore-function
+```js
+    import { createStore, combineReducers, compose } from 'redux'; // 1
+    ...
+    let composeEnhancers = compose; // 2 & 3
+
+    if (__DEV__) { // 4
+        composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSIONN_COMPOSE__ || compose; // 5
+    }
+    ...
+    return createStore(rootReducer, composeEnhancers()); // 6
+```
+
+### #58 - Useful Resources & Links
+
+- [More about Debugging](https://facebook.github.io/react-native/docs/debugging.html)
+
+---
