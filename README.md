@@ -1059,3 +1059,64 @@ export default connect(mapStateToProps, mapDispatchToProps)(App); // 2b & 8
 - [More about Debugging](https://facebook.github.io/react-native/docs/debugging.html)
 
 ---
+
+## Section 5: Linking and Using Third Party Libraries
+
+### #60 - Install Libraries
+
+*E.g*:
+Run `npm i react-native-vector-icons -S` to add the library to the project.
+
+### #62 - Linking Libraries on iOS
+
+*In every iOS-project:*
+1) Open the `.xcodeproj`-file inside the `ios`-folder of the project.
+2) Right-click on the "Libraries" in the left panel and select the option "Add Files to [projectname]".
+3) Navigate to installed package-folder inside of the `node_modules`-folder.
+4) Select the `.xcodeproj`-file, possibly inside the root or another `ios`-subfolder.
+5) Click on the root folder of the project in the left panel.
+6) Open the tab "Build Phases" in the right panel.
+7) Open the "Link Binary With Libraries"-section.
+8) Click on the `+`-icon at the bottom of the list.
+9) Search by filtering on a word from the library's name.
+10) Select the library and click `Add`.
+
+> Some libraries require additional steps, to be taken from the documentation of that library.
+
+### #63 - Linking Libraries on Android
+
+> Follow the instructions from the documentation of the library.
+
+### #64 - Using Library Features: Adding Icons
+
+Goal: Refactor the 'Delete'-button to use a 'trashbin'-icon.
+
+*in PlaceDetail.js:*
+> The `Button`-component can only be used with text.
+1) Replace the `Button`-component with a `Touchable`[X]-component.
+2) Import the `Icon`-component from react-native-vector-icons/[font] without the extension.
+3) Add the `Icon`-tag 
+4) Configure the props, taken from the documentation.
+5) Wrap in `View`-component
+6) Add styling
+7) Add functionality
+```js
+    ...
+    import Icon from 'react-native-vector-icons/Ionicons'; // 2
+    ...
+    <TouchableOpacity // 1
+        onPress={props.onItemDeleted} // 7
+    >
+        <View // 5
+            style={styles.deleteButton} // 6
+        >
+            <Icon // 3
+                //4:
+                size={30} 
+                name="ios-trash" 
+                color="red" 
+            /> 
+        </View>
+    </TouchableOpacity>
+    ...
+```
